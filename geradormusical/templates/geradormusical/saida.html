@@ -1,0 +1,100 @@
+{% extends 'geradormusical/base.html' %}
+{% load static %}
+
+{% block content %}
+<div>                       
+    <p>Transformação realizada com sucesso!</p>
+    <div class="field-row">
+        <input id="posicao" disabled type="text" value="Posição: 0:00" style="width: 70px; height: 60px; text-align: center; color: black"/>
+        {% if midi_path %}
+            <div id="waveform" style="background: black; width: 250px; height: 60px;"></div>
+        {% else %}
+            <span style="color: red;">{{ error_mp3 }}</span>
+        {% endif %}
+        
+        <input id="tempo" disabled type="text" value="Tempo: 0:00" style="width: 70px; height: 60px; text-align: center; color: black"/>
+    </div>
+
+    <div class="field-row">
+        <button id="btnPlay" style="height: 30px"> <img src="{% static 'geradormusical/images/play.png' %}" style="width: 16px;"> </button>
+        <button id="btnPause" style="height: 30px"> <img src="{% static 'geradormusical/images/pause.png' %}" style="width: 16px;"> </button>
+        <button id="btnForward" style="height: 30px"> <img src="{% static 'geradormusical/images/forward.png' %}" style="width: 32px;"> </button>
+        <button id="btnBack" style="height: 30px"> <img src="{% static 'geradormusical/images/backwards.png' %}" style="width: 32px;"> </button>
+        <button id="btnStop" style="height: 30px"> <img src="{% static 'geradormusical/images/restart.png' %}" style="width: 18px;"> </button>
+    </div>
+
+    <div style="display: flex; justify-content: right; margin-top: 10px; margin-bottom: 10px;">
+    {% if midi_path %}
+        <a href="../static/geradormusical/audio/musica_gerada.mid" download>
+            <button>Baixar</button>
+        </a>
+    {% else %}
+        <span style="color: red;">{{ error_midi }}</span>
+    {% endif %}
+    </div>
+</div> 
+
+<script src="https://unpkg.com/wavesurfer.js"></script>
+<script>
+    const posicaoInput = document.getElementById('posicao');
+    const tempoInput = document.getElementById('tempo');
+
+    const wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: 'lime',
+        progressColor: 'green',
+        barWidth: 2,
+        height: 60,
+        responsive: true,
+        interact: false,
+    });
+
+    wavesurfer.load('../static/geradormusical/audio/musica_gerada.mp3');
+
+    // Quando carregar o áudio
+    wavesurfer.on('ready', () => {
+        const duration = wavesurfer.getDuration();
+        tempoInput.value = `Tempo: ${formatarTempo(duration)}`;
+    });
+
+    // Atualiza posição e slider enquanto toca
+    wavesurfer.on('audioprocess', () => {
+        const current = wavesurfer.getCurrentTime();
+        posicaoInput.value = `Posição: ${formatarTempo(current)}`;
+    });
+
+    wavesurfer.on('seek', () => {
+        const current = wavesurfer.getCurrentTime();
+        posicaoInput.value = `Posição: ${formatarTempo(current)}`;
+    });
+    
+
+    // Função para formatar tempo em mm:ss
+    function formatarTempo(segundos) {
+        const min = Math.floor(segundos / 60);
+        const seg = Math.floor(segundos % 60);
+        return `${min}:${seg < 10 ? '0' + seg : seg}`;
+    }
+
+    // Controles dos botões
+    document.getElementById('btnPlay').addEventListener('click', () => wavesurfer.play());
+    document.getElementById('btnPause').addEventListener('click', () => wavesurfer.pause());
+    document.getElementById('btnStop').addEventListener('click', () => wavesurfer.stop());
+
+    document.getElementById('btnBack').addEventListener('click', () => {
+        const novoTempo = Math.max(0, wavesurfer.getCurrentTime() - 10);
+        wavesurfer.seekTo(novoTempo / wavesurfer.getDuration());
+    });
+
+    document.getElementById('btnForward').addEventListener('click', () => {
+        const novoTempo = Math.min(wavesurfer.getDuration(), wavesurfer.getCurrentTime() + 10);
+        wavesurfer.seekTo(novoTempo / wavesurfer.getDuration());
+    });
+
+    // Slider para navegação
+    slider.addEventListener('input', () => {
+        wavesurfer.seekTo(slider.value / wavesurfer.getDuration());
+    });
+</script>
+
+{% endblock %}

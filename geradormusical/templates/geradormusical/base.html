@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador Musical</title>
+    <link rel="stylesheet" href="{% static 'geradormusical/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'geradormusical/css/css.css' %}">
+
+
+</head>
+<body>
+    <main>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <div class="window" style="width: 600px; ">
+                <div class="title-bar">
+                    <div class="title-bar-text">Gerador de música a partir de texto</div>
+                    <div class="title-bar-controls">
+                        <div id="modal-help" class="modal-help" style="display:none;">
+                            <div class="window" style="width: 400px; margin: 10vh auto;">
+                                <div class="title-bar inactive">
+                                    <div class="title-bar-text">Ajuda</div>
+                                    <div class="title-bar-controls">
+                                        <button aria-label="Close" onclick="closeHelp()">×</button>
+                                    </div>
+                                </div>
+                                <div class="window-body">
+                                    <p style="font-weight: bold;">Modo de uso</p>
+                                    <ul>
+                                        <li>Veja a definição dos comandos de texto na documentação abaixo.</li>
+                                        <div class="sunken-panel" style="height: 120px; width: 300px; overflow-y: auto;margin-top: 10px;">
+                                            <table class="interactive" style=" border-collapse: collapse;">
+                                                <thead>
+                                                    <tr>
+                                                    <th>Texto</th>
+                                                    <th>Informação Musical ou Ação</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td>A ou a</td><td>Nota Lá</td></tr>
+                                                    <tr><td>B ou b</td><td>Nota Si</td></tr>
+                                                    <tr><td>C ou c</td><td>Nota Dó</td></tr>
+                                                    <tr><td>D ou d</td><td>Nota Ré</td></tr>
+                                                    <tr><td>E ou e</td><td>Nota Mi</td></tr>
+                                                    <tr><td>F ou f</td><td>Nota Fá</td></tr>
+                                                    <tr><td>G ou g</td><td>Nota Sol</td></tr>
+                                                    <tr><td>Espaço</td><td>Silêncio ou pausa</td></tr>
+                                                    <tr><td>+</td><td>Aumenta volume para o DOBRO do volume atual</td></tr>
+                                                    <tr><td>-</td><td>Volume volta a ser volume default (o valor de início)</td></tr>
+                                                    <tr><td>O/o, I/i, U/u</td><td>Se anterior era NOTA, repete nota; senão, som “Telefone tocando” (125)</td></tr>
+                                                    <tr><td>R+</td><td>Aumenta UMA oitava em relação à atual</td></tr>
+                                                    <tr><td>R-</td><td>Diminui UMA oitava em relação à atual</td></tr>
+                                                    <tr><td>?</td><td>Toca uma nota aleatória (de A a G)</td></tr>
+                                                    <tr><td>NL (nova linha)</td><td>Trocar instrumento (definir regra de troca)</td></tr>
+                                                    <tr><td>BPM+</td><td>Aumenta BPM em 80 unidades</td></tr>
+                                                    <tr><td>;</td><td>Atribui um valor aleatório à BPM</td></tr>
+                                                    <tr><td>ELSE</td><td>NOP (Continua a fazer o que está fazendo)</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <button aria-label="Help" onclick="openHelp()">?</button>
+                        </div>
+                </div>
+                <div class="window-body" style="display: flex; flex-direction: column; align-items: center;">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <div class="status-bar">
+                    <p class="status-bar-field">&copy 2025 - UFRGS</p>
+                </div>
+            </div>
+        </div> 
+    </main>
+</body>
+</html> 
+<script>
+    function openHelp() {
+        document.getElementById('modal-help').style.display = 'flex';
+    }
+    function closeHelp() {
+        document.getElementById('modal-help').style.display = 'none';
+    }
+</script>
+<style>
+    .modal-help {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.4);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .interactive td {
+    white-space: normal;      /* Permite quebra de linha */
+    word-wrap: break-word;    /* Quebra palavras longas */
+    padding: 2px 6px;
+    }
+</style>

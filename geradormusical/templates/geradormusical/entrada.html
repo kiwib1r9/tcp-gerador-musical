@@ -1,0 +1,103 @@
+{% extends 'geradormusical/base.html' %}
+{% load static %}
+{% block content %}
+    <div>
+        <p>Transforme um texto em música!</p>
+        <ul>
+            <li>Explore o mapeamento de palavras para parâmetros sonoros.</li>
+            <li>Se divirta!</li>
+        </ul>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="container-entradas">
+                <div class="field-row container-bpm">
+                    {{form.bpm.label_tag}}
+                    {{form.bpm}}
+
+                </div>
+
+                <div class="field-row">
+                    {{form.instrumento.label_tag}}
+                    {{form.instrumento}}
+                </div>
+            </div>
+            <div>
+                <div class="field-row container-volume">
+                    {{form.volume.label_tag}}
+                    {{form.volume}}
+                    <label id="volume-value" style="width: 30px; text-align: right;">5</label>
+                </div>
+            </div>
+            <div class="field-row">
+                {{form.oitava.label_tag}}
+                {{form.oitava}}
+            </div>
+            <div class="field-row-stacked" style="margin-top: 10px;">
+                {{form.texto.label_tag}}
+                {{form.texto}}
+
+                <div class="counter-texto" id="charCount">0/1000</div>
+            </div>
+            <div class="container-botoes">
+                {% comment %} <button>Importar arquivo</button> {% endcomment %}
+                <button type="submit" id="btnGerarMusica">Gerar música</button>
+            </div>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </form>
+
+
+
+
+
+    <script>
+        // SCRIPT PARA O SLIDER DE VOLUME
+        const slider = document.getElementById('volume-slider');
+        const volumeLabel = document.getElementById('volume-value');
+        
+        // atualiza o label quando o slider é movido
+        slider.addEventListener('input', () => {
+          volumeLabel.textContent = slider.value;
+        });
+
+        // atualiza o label ao carregar a página
+        window.addEventListener('DOMContentLoaded', () => {
+          volumeLabel.textContent = slider.value;
+        });
+
+        // SCRIPT PARA CONTAR CARACTERES DO TEXTO
+        const textarea = document.getElementById('id_texto');
+        const charCount = document.getElementById('charCount');
+      
+        function updateCharCount() {
+          charCount.textContent = `${textarea.value.length}/1000`;
+        }
+
+        // atualiza a contagem ao carregar a página e ao digitar
+        textarea.addEventListener('input', updateCharCount);
+        window.addEventListener('DOMContentLoaded', updateCharCount);
+
+        
+        // SCRIPT PARA O INPUT CAMPO DE BPM
+        const bpmInput = document.getElementById('id_bpm');
+
+        // limita a entrada para apenas numeros de 3 dígitos
+        bpmInput.addEventListener('input', () => {
+            let value = parseInt(bpmInput.value, 10);
+            let valor = value.toString();
+
+            valor = valor.slice(0, 3);                
+            value = parseInt(valor, 10);             
+            bpmInput.value = value;     
+        });
+
+    </script>
+{% endblock %}
