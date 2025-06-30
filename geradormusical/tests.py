@@ -8,7 +8,7 @@ class InstrumentoTestCase(TestCase):
         self.instrumento = Instrumento()
 
     def test_instrumento_inicial(self):
-        self.assertEqual(self.instrumento.obter_valor(), INSTRUMENTOS['Telefone Tocando'])
+        self.assertEqual(self.instrumento.obter_valor(), INSTRUMENTOS['Telefone tocando'])
 
     def test_trocar_instrumento(self):
         self.instrumento.trocar()
@@ -17,7 +17,7 @@ class InstrumentoTestCase(TestCase):
     def test_trocar_instrumento_circular(self):
         for _ in range(len(INSTRUMENTOS)):
             self.instrumento.trocar()
-        self.assertEqual(self.instrumento.obter_valor(), INSTRUMENTOS['Telefone Tocando'])
+        self.assertEqual(self.instrumento.obter_valor(), INSTRUMENTOS['Telefone tocando'])
 
     def test_set_codigo_valido(self):
         self.instrumento.set_codigo(INSTRUMENTOS['Gaita de Foles'])

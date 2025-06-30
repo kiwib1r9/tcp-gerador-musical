@@ -125,7 +125,7 @@ class GeradorMusical:
                     tempo_atual += 1
                 else:
                     self.midi.addProgramChange(DEFAULT_TRACK, DEFAULT_CHANNEL, tempo_atual,
-                                            INSTRUMENTOS['Telefone Tocando'])
+                                            INSTRUMENTOS['Telefone tocando'])
                     self.midi.addNote(DEFAULT_TRACK, DEFAULT_CHANNEL,
                                     NOTAS['A'] + oitava_atual, tempo_atual, DEFAULT_DURATION, volume_atual)
                     tempo_atual += 1

@@ -1,0 +1,3 @@
+**/__pycache__
+geradormusical/static/geradormusical/audio/*
+db.sqlite3

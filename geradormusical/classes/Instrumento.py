@@ -5,7 +5,7 @@ from ..consts import *
 
 class Instrumento:
     def __init__(self):
-        self.codigo = INSTRUMENTOS['Telefone Tocando']  #default
+        self.codigo = INSTRUMENTOS['Telefone tocando']  #default
 
     def set_codigo(self, codigo):
         if (isinstance(codigo, int) and codigo in INSTRUMENTOS.values()):
